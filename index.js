@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 const { MongoClient } = require("mongodb");
 var ObjectId = require("mongodb").ObjectId;
 const port = process.env.PORT || 5000;
@@ -14,8 +15,14 @@ async function run() {
   try {
     // Connect the client to the server
     await client.connect();
-    console.log(uri);
-    console.log("Connected successfully to server");
+    const database = client.db("solotrip");
+    const hotelCollection = database.collection("hotelList");
+    // get the hotel list form the database
+    app.get("/hotels", async (req, res) => {
+      console.log("hitting the documents database");
+      const hotels = await hotelCollection.find({}).toArray();
+      res.send(hotels);
+    });
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
