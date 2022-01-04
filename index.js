@@ -23,6 +23,13 @@ async function run() {
       const hotels = await hotelCollection.find({}).toArray();
       res.send(hotels);
     });
+    // get a single hotel from the database with the ObjectId
+    app.get("/hotels/:id", async (req, res) => {
+      const hotel = await hotelCollection.findOne({
+        _id: ObjectId(req.params.id),
+      });
+      res.send(hotel);
+    });
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
