@@ -18,6 +18,7 @@ async function run() {
     const database = client.db("solotrip");
     const hotelCollection = database.collection("hotelList");
     const usersCollection = database.collection("users");
+    const ordersCollection = database.collection("orders");
     // get the hotel list form the database
     app.get("/hotels", async (req, res) => {
       console.log("hitting the documents database");
