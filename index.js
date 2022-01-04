@@ -31,6 +31,12 @@ async function run() {
       });
       res.send(hotel);
     });
+    // save orders to the database
+    app.post("/orders", async (req, res) => {
+      const order = req.body;
+      const result = await ordersCollection.insertOne(order);
+      res.json(result);
+    });
     // save a user to database
     app.post("/users", async (req, res) => {
       const user = req.body;
