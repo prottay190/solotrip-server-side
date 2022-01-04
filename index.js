@@ -32,6 +32,12 @@ async function run() {
       });
       res.send(hotel);
     });
+    // delete a product from the database
+    app.delete("/hotels/:id", async (req, res) => {
+      const id = req.params.id;
+      const result = await hotelCollection.deleteOne({ _id: ObjectId(id) });
+      res.json(result);
+    });
     // save orders to the database
     app.post("/orders", async (req, res) => {
       const order = req.body;
