@@ -38,6 +38,26 @@ async function run() {
       const result = await ordersCollection.insertOne(order);
       res.json(result);
     });
+    // get all orders from the database
+    app.get("/orders", async (req, res) => {
+      const orders = await ordersCollection.find({}).toArray();
+      res.send(orders);
+    });
+    // get orders by users email from the database and return the orders
+    app.get("/orders/:email", async (req, res) => {
+      const orders = await ordersCollection
+        .find({
+          email: req.params.email,
+        })
+        .toArray();
+      res.send(orders);
+    });
+    // DELETE AN ORDER
+    app.delete("/orders/:id", async (req, res) => {
+      const query = req.params.id;
+      const result = await ordersCollection.deleteOne({ _id: ObjectId(query) });
+      res.send(result);
+    });
     // save a user to database
     app.post("/users", async (req, res) => {
       const user = req.body;
