@@ -17,6 +17,7 @@ async function run() {
     await client.connect();
     const database = client.db("solotrip");
     const hotelCollection = database.collection("hotelList");
+    const usersCollection = database.collection("users");
     // get the hotel list form the database
     app.get("/hotels", async (req, res) => {
       console.log("hitting the documents database");
@@ -29,6 +30,39 @@ async function run() {
         _id: ObjectId(req.params.id),
       });
       res.send(hotel);
+    });
+    // save a user to database
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const result = await usersCollection.insertOne(user);
+      res.json(result);
+    });
+    // get all the users form the database and return them
+    app.get("/users", async (req, res) => {
+      const users = await usersCollection.find({}).toArray();
+      res.send(users);
+    });
+    // check an user if he an admin
+    app.get("/users/:email", async (req, res) => {
+      const user = await usersCollection.findOne({ email: req.params.email });
+      let isAdmin = false;
+      if (user?.role === "admin") {
+        isAdmin = true;
+      }
+      res.json({ admin: isAdmin });
+    });
+    // make an admin
+    app.put("/users/admin", async (req, res) => {
+      const user = req.body;
+      const options = { upsert: true };
+      const filter = { email: user.email };
+      const updateDoc = { $set: { role: "admin" } };
+      const result = await usersCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+      res.json(result);
     });
   } finally {
     // Ensures that the client will close when you finish/error
