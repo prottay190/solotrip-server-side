@@ -44,7 +44,7 @@ async function run() {
       const result = await ordersCollection.insertOne(order);
       res.json(result);
     });
-    // get all orders from the database
+    // get all orders from the  database
     app.get("/orders", async (req, res) => {
       const orders = await ordersCollection.find({}).toArray();
       res.send(orders);
